@@ -14,5 +14,8 @@ This is the initial mobile shell. It is not yet connected to production authenti
 ## Android APK
 The `preview` EAS profile is configured to produce an installable APK. After the repository is connected to Expo EAS and credentials are configured, run an Android preview build. Production store releases should use the AAB profile.
 
+## CI
+GitHub Actions runs an Android JavaScript bundle export check for changes to this mobile client. This does not produce an APK or validate native device installation.
+
 ## Integration
 The existing backend design must be imported and reviewed before wiring the client. Required contract includes authenticated per-device sessions, device-scoped delivery receipts, encrypted message envelopes, and Signal-compatible key management. Never store plaintext private keys in the database or commit secrets.
