@@ -1,0 +1,61 @@
+name: Import project archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Extract project archive
+        run: |
+          test -f owwdy-messenger-per-device-ready.zip
+          rm -rf /tmp/owwdy-import
+          mkdir -p /tmp/owwdy-import
+          unzip -q owwdy-messenger-per-device-ready.zip -d /tmp/owwdy-import
+          test -d /tmp/owwdy-import/owwdy-messenger
+          cp -a /tmp/owwdy-import/owwdy-messenger/. .
+          rm owwdy-messenger-per-device-ready.zip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+        continue-on-error: true
+        id: install
+
+      - name: Typecheck
+        if: steps.install.outcome == 'success'
+        run: npm run typecheck
+        continue-on-error: true
+        id: typecheck
+
+      - name: Build
+        if: steps.install.outcome == 'success'
+        run: npm run build
+        continue-on-error: true
+        id: build
+
+      - name: Commit extracted project
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import OWWDY Messenger project archive" || echo "No changes to commit"
+          git push
+
+      - name: Report verification
+        if: always()
+        run: |
+          echo "Dependency installation: ${{ steps.install.outcome }}"
+          echo "Typecheck: ${{ steps.typecheck.outcome }}"
+          echo "Build: ${{ steps.build.outcome }}"
