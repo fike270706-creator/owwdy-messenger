@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "owwdy",
+    "slug": "owwdy",
+    "scheme": "owwdy",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": { "supportsTablet": true, "bundleIdentifier": "app.owwdy.messenger" },
+    "android": { "package": "app.owwdy.messenger", "edgeToEdgeEnabled": true },
+    "plugins": ["expo-router", "expo-secure-store"],
+    "extra": { "eas": { "projectId": "REPLACE_WITH_EXPO_PROJECT_ID" } }
+  }
+}
